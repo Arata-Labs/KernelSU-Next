@@ -333,8 +333,14 @@ jobs:
           TITLE: CI Manager (TEST BUILD)
         run: |
           if [ ! -z "${{ secrets.BOT_TOKEN }}" ]; then
-            export VERSION=$(git rev-list --count HEAD)
-            APK=$(find ./app/build/outputs/apk/release -name "*.apk")
-            pip3 install telethon
-            python3 $GITHUB_WORKSPACE/scripts/ksunextbot.py $APK
+            if [ ! -z "${{ secrets.API_ID }}" ] && [ ! -z "${{ secrets.API_HASH }}" ]; then
+              export VERSION=$(git rev-list --count HEAD)
+              APK=$(find ./app/build/outputs/apk/release -name "*.apk")
+              pip3 install telethon
+              python3 $GITHUB_WORKSPACE/scripts/ksunextbot.py $APK
+            else
+              export VERSION=$(git rev-list --count HEAD)
+              APK=$(find ./app/build/outputs/apk/release -name "*.apk")
+              pip3 install requests
+              python3 $GITHUB_WORKSPACE/scripts/ksunextbot2.py $APK
           fi
